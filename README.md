@@ -58,4 +58,4 @@ To run the backend application, use the following command in the backend termina
 
 
 
-Note : Both, the frontend and backend need to be running simultaneously for the toolkit to work.
+## Note : Both, the frontend and backend need to be running simultaneously for the toolkit to work.
