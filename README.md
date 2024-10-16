@@ -1,4 +1,4 @@
-# DC Toolkit (Collaborative)
+# DC Toolkit 
 To use the DeepCytes OSINT Search Engine, follow the below steps.
 
 ## Clone the repository 
@@ -55,3 +55,7 @@ Make sure to generate and paste your respective API keys in the .env file.
 
 To run the backend application, use the following command in the backend terminal:   
 `python app.py`    
+
+
+
+Note : Both, the frontend and backend need to be running simultaneously for the toolkit to work.
