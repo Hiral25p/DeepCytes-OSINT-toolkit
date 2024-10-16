@@ -1,14 +1,12 @@
 # DC Toolkit (Collaborative)
-To work on this repository as a collaborator, read and follow the below steps carefully.
+To use the DeepCytes OSINT Search Engine, follow the below steps.
 
-
-# Steps for Collaborators to Work on the Repository
 ## Clone the repository 
 In your terminal run:    
-`git clone https://github.com/RiteshJha912/DC-Toolkit-Collaborative.git`
+`git clone https://github.com/Hiral25p/DeepCytes-OSINT-toolkit.git`
 
 ### Navigate to the project folder:
-`cd DC-Toolkit-Collaborative`
+`cd DeepCytes-OSINT-toolkit`
 
 
 
