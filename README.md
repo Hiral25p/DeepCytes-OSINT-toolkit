@@ -54,8 +54,12 @@ In the backend root folder, create a .env file with the following format:
 Make sure to generate and paste your respective API keys in the .env file.   
 
 To run the backend application, use the following command in the backend terminal:   
-`python app.py`    
+`python app.py`      
 
 
 
-## Note : Both, the frontend and backend need to be running simultaneously for the toolkit to work.
+
+
+
+## Note      
+Both, the frontend and backend need to be running simultaneously for the toolkit to work.
