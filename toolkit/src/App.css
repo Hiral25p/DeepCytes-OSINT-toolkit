@@ -188,6 +188,20 @@ h2 {
   background-color: #005866;
 }
 
+/* Download button */
+.download-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.download-btn:hover {
+  background-color: #218838;
+}
 
 
 /* Responsiveness  */

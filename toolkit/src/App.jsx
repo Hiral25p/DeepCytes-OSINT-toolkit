@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import './App.css'
 import logo from './assets/logo.png'
+import secondarylogo from './assets/dclogo.png'
+import jsPDF from 'jspdf' // Import jsPDF library
+import 'jspdf-autotable' // For table support if needed
 
 function App() {
   const [searchType, setSearchType] = useState('phoneNumber')
@@ -112,6 +115,87 @@ function App() {
     }
   }
 
+  // Function to convert image to Base64 format
+  const toBase64 = (url) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image()
+      img.crossOrigin = 'Anonymous' // To avoid CORS issues for local images
+      img.src = url
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d')
+
+        const squareSize = Math.max(img.width, img.height) // Ensure we maintain square proportions
+        canvas.width = squareSize
+        canvas.height = squareSize
+
+        // Draw image on canvas, ensuring it's centered and not distorted
+        ctx.drawImage(
+          img,
+          (squareSize - img.width) / 2,
+          (squareSize - img.height) / 2,
+          img.width,
+          img.height
+        )
+
+        const dataURL = canvas.toDataURL('image/png')
+        resolve(dataURL)
+      }
+      img.onerror = (err) => {
+        reject(err)
+      }
+    })
+  }
+
+  // Function for report generation with image and title
+  const downloadPDF = async () => {
+    const doc = new jsPDF()
+
+    doc.setFontSize(16)
+
+    const imgData = await toBase64(secondarylogo)
+
+    const imgSize = 26 
+
+    
+    const pageWidth = doc.internal.pageSize.getWidth()
+    const imgX = (pageWidth - imgSize) / 2 
+    const imgY = 8
+
+  
+    doc.addImage(imgData, 'PNG', imgX, imgY, imgSize, imgSize)
+
+    const titleY = imgY + imgSize + 10
+    doc.setFontSize(21)
+    doc.text('DeepCytes OSINT Search Report', pageWidth / 2, titleY, {
+      align: 'center',
+    })
+
+  
+    doc.setLineWidth(0.5)
+    doc.line(20, titleY + 2, pageWidth - 20, titleY + 2)
+
+    let yOffset = titleY + 20
+
+    
+    const plainText = document.querySelector('.output-box').innerText
+
+    const textLines = doc.splitTextToSize(plainText, pageWidth - 20) 
+
+    textLines.forEach((line) => {
+      if (yOffset > 280) {
+        doc.addPage()
+        yOffset = 20 
+      }
+      doc.setFontSize(11) 
+      doc.text(line, 10, yOffset)
+      yOffset += 5
+    })
+
+    // Save the PDF
+    doc.save('DC-OSINTReport.pdf')
+  }
+
   return (
     <div className={`container ${submitted ? 'expanded-container' : ''}`}>
       <img src={logo} alt='Logo' className='logo' />
@@ -146,6 +230,12 @@ function App() {
           className='output-box'
           dangerouslySetInnerHTML={{ __html: output }}
         />
+      )}
+
+      {submitted && (
+        <button className='download-btn' onClick={downloadPDF}>
+          Download
+        </button>
       )}
     </div>
   )
