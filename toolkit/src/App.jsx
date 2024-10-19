@@ -95,12 +95,27 @@ function App() {
     setSubmitted(false)
   }
 
+  const getPlaceholderText = () => {
+    switch (searchType) {
+      case 'phoneNumber':
+        return 'e.g. +91 XXXXX-XXXXX'
+      case 'instagram':
+        return 'Instagram Username'
+      case 'twitter':
+        return 'Twitter Username'
+      case 'github':
+        return 'GitHub Username'
+      case 'email':
+        return 'e.g. example@gmail.com'
+      default:
+        return ''
+    }
+  }
+
   return (
     <div className='container'>
       <img src={logo} alt='Logo' className='logo' />
-      {/* <h2>DeepCytes OSINT Toolkit</h2> */}
       <form onSubmit={handleSubmit}>
-        {/* Dropdown for search type */}
         <select
           className='input-box'
           value={searchType}
@@ -113,12 +128,9 @@ function App() {
           <option value='email'>Email</option>
         </select>
 
-        {/* Input box for the user */}
         <input
           type='text'
-          placeholder={`Enter ${
-            searchType.charAt(0).toUpperCase() + searchType.slice(1)
-          }`}
+          placeholder={getPlaceholderText()}
           value={inputValue}
           onChange={handleFieldChange}
           className={`input-box ${submitted ? '' : ''}`}
