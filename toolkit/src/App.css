@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+
 #root {
   max-width: 100%;
   margin: 0 auto;
@@ -53,6 +54,28 @@ h2 {
   font-size: 10px;
   transition: border 0.5s ease, background-color 0.5s ease, color 0.5s ease;
   background-color: black;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+}
+
+.input-box::after {
+  content: '▼';
+  font-size: 12px;
+  color: #00d9ff;
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.input-box:focus {
+  outline: none;
+  border: 1px solid #005866;
+  background-color: rgba(0, 217, 255, 0.2);
+  color: rgb(255, 255, 255);
 }
 
 .input-box:hover {
@@ -60,15 +83,21 @@ h2 {
   background-color: rgba(0, 217, 255, 0.1);
 }
 
-.input-box:hover:not(.focused) {
-  border: 1px solid #00d9ff;
-  background-color: rgba(0, 217, 255, 0.1);
+.input-box option {
+  color: black;
+  background-color: white;
+  font-size: 10px;
+  padding: 5px;
 }
 
-.input-box:focus {
-  outline: none;
-  border: 1px solid #005866;
+.input-box:focus option {
+  color: black;
   background-color: rgba(0, 217, 255, 0.2);
+}
+
+.input-box option[disabled] {
+  color: white;
+  background-color: black;
 }
 
 .submit-btn {
@@ -201,7 +230,6 @@ footer {
   z-index: 10;
 }
 
-/* Responsive Styles */
 @media (max-width: 800px) {
   .logo {
     display: none;

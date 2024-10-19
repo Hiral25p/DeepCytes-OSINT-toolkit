@@ -3,11 +3,8 @@ import './App.css'
 import logo from './assets/logo.png'
 
 function App() {
-  const [phoneNumber, setPhoneNumber] = useState('')
-  const [instagram, setInstagram] = useState('')
-  const [twitter, setTwitter] = useState('')
-  const [github, setGithub] = useState('')
-  const [email, setEmail] = useState('')
+  const [searchType, setSearchType] = useState('phoneNumber') // Dropdown value
+  const [inputValue, setInputValue] = useState('') // Single input box value
   const [output, setOutput] = useState('')
   const [submitted, setSubmitted] = useState(false)
 
@@ -45,13 +42,7 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const dataToSend = {
-      phoneNumber: phoneNumber || null,
-      instagram: instagram || null,
-      twitter: twitter || null,
-      github: github || null,
-      email: email || null,
-    }
+    const dataToSend = { [searchType]: inputValue || null }
 
     try {
       const response = await fetch('http://127.0.0.1:5000/process', {
@@ -65,39 +56,31 @@ function App() {
       const data = await response.json()
 
       const inputInfo = `
-                <div class="input-info">
-                    <h4><strong>Provided Information:</strong></h4>
-                    ${phoneNumber ? `<p>Phone Number: ${phoneNumber}</p>` : ''}
-                    ${instagram ? `<p>Instagram: ${instagram}</p>` : ''}
-                    ${twitter ? `<p>Twitter: ${twitter}</p>` : ''}
-                    ${github ? `<p>GitHub: ${github}</p>` : ''}
-                    ${email ? `<p>Email: ${email}</p>` : ''}
-                    <br/><br/>
-                </div>
-            `
+        <div class="input-info">
+          <h4><strong>Provided Information:</strong></h4>
+          ${inputValue ? `<p>${searchType}: ${inputValue}</p>` : ''}
+          <br/><br/>
+        </div>
+      `
 
       setOutput(`
-                ${inputInfo}
-                <div class="info-section">
-                    <h3><u>Relevant Information:</u></h3>
-                    <div>${formatOutput(data.relevant_info)}</div>
-                </div>
-                <div class="info-section">
-                    <h3><u>All Available Information:</u></h3>
-                    <div>${formatOutput(data.other_info)}</div>
-                </div>
-                <div class="result-summary">
-                    <p>*Results gathered from <strong>${
-                      data.tool_count || 'multiple'
-                    }</strong> sources</p>
-                </div>
-            `)
+        ${inputInfo}
+        <div class="info-section">
+          <h3><u>Relevant Information:</u></h3>
+          <div>${formatOutput(data.relevant_info)}</div>
+        </div>
+        <div class="info-section">
+          <h3><u>All Available Information:</u></h3>
+          <div>${formatOutput(data.other_info)}</div>
+        </div>
+        <div class="result-summary">
+          <p>*Results gathered from <strong>${
+            data.tool_count || 'multiple'
+          }</strong> sources</p>
+        </div>
+      `)
 
-      setPhoneNumber('')
-      setInstagram('')
-      setTwitter('')
-      setGithub('')
-      setEmail('')
+      setInputValue('')
       setSubmitted(true)
     } catch (error) {
       setOutput(
@@ -106,8 +89,8 @@ function App() {
     }
   }
 
-  const handleFieldChange = (setter) => (e) => {
-    setter(e.target.value)
+  const handleFieldChange = (e) => {
+    setInputValue(e.target.value)
     setOutput('')
     setSubmitted(false)
   }
@@ -115,47 +98,37 @@ function App() {
   return (
     <div className='container'>
       <img src={logo} alt='Logo' className='logo' />
-      <h2>DeepCytes OSINT Toolkit</h2>
+      {/* <h2>DeepCytes OSINT Toolkit</h2> */}
       <form onSubmit={handleSubmit}>
+        {/* Dropdown for search type */}
+        <select
+          className='input-box'
+          value={searchType}
+          onChange={(e) => setSearchType(e.target.value)}
+        >
+          <option value='phoneNumber'>Phone Number</option>
+          <option value='instagram'>Instagram</option>
+          <option value='twitter'>Twitter</option>
+          <option value='github'>GitHub</option>
+          <option value='email'>Email</option>
+        </select>
+
+        {/* Input box for the user */}
         <input
           type='text'
-          placeholder='Enter Phone Number (e.g. +91 XXXXX-XXXXX)'
-          value={phoneNumber}
-          onChange={handleFieldChange(setPhoneNumber)}
+          placeholder={`Enter ${
+            searchType.charAt(0).toUpperCase() + searchType.slice(1)
+          }`}
+          value={inputValue}
+          onChange={handleFieldChange}
           className={`input-box ${submitted ? '' : ''}`}
         />
-        <input
-          type='text'
-          placeholder='Enter Instagram Username'
-          value={instagram}
-          onChange={handleFieldChange(setInstagram)}
-          className={`input-box ${submitted ? '' : ''}`}
-        />
-        <input
-          type='text'
-          placeholder='Enter Twitter Username'
-          value={twitter}
-          onChange={handleFieldChange(setTwitter)}
-          className={`input-box ${submitted ? '' : ''}`}
-        />
-        <input
-          type='text'
-          placeholder='Enter GitHub Username'
-          value={github}
-          onChange={handleFieldChange(setGithub)}
-          className={`input-box ${submitted ? '' : ''}`}
-        />
-        <input
-          type='text'
-          placeholder='Enter Email Address (e.g. example@gmail.com)'
-          value={email}
-          onChange={handleFieldChange(setEmail)}
-          className={`input-box ${submitted ? '' : ''}`}
-        />
+
         <button type='submit' className='submit-btn'>
           Search
         </button>
       </form>
+
       {output && (
         <div
           className='output-box'
