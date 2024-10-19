@@ -25,14 +25,26 @@ html {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  max-width: 90%;
+  width: 100%;
+  max-width: 700px;
+  /* Set a standard max-width */
+  min-width: 300px;
+  /* Ensure it doesn't shrink too much */
   padding: 60px 20px;
   background-color: #001F3F;
   box-shadow: 0px 10px 40px rgba(0, 217, 255, 0.5), 0px 20px 60px rgba(0, 217, 255, 0.3);
   border-radius: 90px;
-  max-height: 80vh;
+  max-height: 40vh;
   overflow-y: auto;
   border: 1px solid #00d9ff;
+  transition: max-height 0.3s ease, width 0.3s ease;
+}
+
+/* Expanded container style after submission */
+.expanded-container {
+  max-height: 80vh;
+  width: 100%;
+  max-width: 90%;
 }
 
 h2 {
@@ -43,32 +55,25 @@ h2 {
   font-weight: 500;
 }
 
+/* Setting a consistent width for the input box */
 .input-box {
   padding: 10px 5px;
   margin: 8px 0;
   width: 70%;
+  /* Fixed width for input boxes */
+  max-width: 400px;
+  /* Set a max-width to prevent overflow on larger screens */
   border: 1px solid black;
   border-radius: 10px;
   color: white;
   text-align: center;
-  font-size: 10px;
+  font-size: 12px;
   transition: border 0.5s ease, background-color 0.5s ease, color 0.5s ease;
   background-color: black;
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
   cursor: pointer;
-}
-
-.input-box::after {
-  content: '▼';
-  font-size: 12px;
-  color: #00d9ff;
-  position: absolute;
-  right: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
 }
 
 .input-box:focus {
@@ -100,13 +105,14 @@ h2 {
   background-color: black;
 }
 
+/* Consistent style for the submit button */
 .submit-btn {
   margin-top: 8px;
   padding: 10px 30px;
   background-color: #005866;
   color: white;
   cursor: pointer;
-  font-size: 10px;
+  font-size: 12px;
   border: none;
   border-radius: 5px;
   display: block;
@@ -121,19 +127,48 @@ h2 {
   border: 1px solid rgb(193, 180, 180);
 }
 
+/* Consistent output box styling */
 .output-box {
   margin-top: 20px;
   padding: 10px;
   width: 90%;
   max-width: 700px;
+  color: white;
   background-color: rgba(10, 10, 10, 0.8);
   border: 2px solid rgba(0, 217, 255, 0.5);
   border-radius: 15px;
   text-align: left;
   max-height: 300px;
   overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: #006375 transparent;
+}
+
+.output-box h3{
+  font-size: 14px;
+}
+.output-box h4{
+  font-size: 13px;
+}
+.output-box p {
+  font-size: 12px
+}
+
+.result-summary {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 10px;
+  font-size: 10px;
+  color: #00d9ff;
+}
+
+.logo {
+  position: fixed;
+  /* Fixes the logo to stay in place even when scrolling */
+  top: 20px;
+  left: 20px;
+  width: 160px;
+  height: auto;
+  z-index: 10;
+  /* Ensures the logo stays above other content */
 }
 
 .output-box::-webkit-scrollbar {
@@ -154,83 +189,14 @@ h2 {
   background-color: #005866;
 }
 
-.output-box h3 {
-  margin: 8px 0;
-  font-size: 12px;
-  color: #00d9ff;
-}
-
-.output-box h4 {
-  margin: 4px 0;
-  font-size: 11px;
-  color: #00d9ff;
-}
-
-.output-box p {
-  margin: 4px 0;
-  font-size: 10px;
-  line-height: 1.4;
-  color: #e0e0e0;
-}
-
-.output-box strong {
-  color: #0099b4;
-}
-
-.input-info p {
-  margin: 4px 0;
-  font-size: 10px;
-  color: #e0e0e0;
-}
-
-.info-section {
-  border: 1px solid rgba(0, 217, 255, 0.3);
-  border-radius: 8px;
-  padding: 8px;
-  margin-bottom: 40px;
-  background-color: rgba(0, 25, 38, 0.8);
-}
-
-.info-section u {
-  color: #00d9ff;
-}
-
-pre {
-  background-color: rgba(30, 30, 30, 0.9);
-  padding: 6px;
-  border-radius: 4px;
-  font-size: 9px;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  color: #e0e0e0;
-}
-
-.result-summary {
-  text-align: center;
-  font-weight: bold;
-  margin-top: 10px;
-  font-size: 10px;
-  color: #00d9ff;
-}
-
-html {
-  overflow-y: auto;
-}
-
-footer {
-  display: none;
-}
-
-.logo {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  width: 160px;
-  height: auto;
-  z-index: 10;
-}
-
+/* Ensure consistent layout on smaller screens */
 @media (max-width: 800px) {
+  .input-box {
+    width: 90%;
+    max-width: 100%;
+    /* Makes sure input adapts on smaller screens */
+  }
+
   .logo {
     display: none;
   }

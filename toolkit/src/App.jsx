@@ -3,8 +3,8 @@ import './App.css'
 import logo from './assets/logo.png'
 
 function App() {
-  const [searchType, setSearchType] = useState('phoneNumber') // Dropdown value
-  const [inputValue, setInputValue] = useState('') // Single input box value
+  const [searchType, setSearchType] = useState('phoneNumber')
+  const [inputValue, setInputValue] = useState('')
   const [output, setOutput] = useState('')
   const [submitted, setSubmitted] = useState(false)
 
@@ -81,7 +81,7 @@ function App() {
       `)
 
       setInputValue('')
-      setSubmitted(true)
+      setSubmitted(true) // Set submitted state to true
     } catch (error) {
       setOutput(
         '<p>There was an error fetching the data. Please try again.</p>'
@@ -113,7 +113,7 @@ function App() {
   }
 
   return (
-    <div className='container'>
+    <div className={`container ${submitted ? 'expanded-container' : ''}`}>
       <img src={logo} alt='Logo' className='logo' />
       <form onSubmit={handleSubmit}>
         <select
