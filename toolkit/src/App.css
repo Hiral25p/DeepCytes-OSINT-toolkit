@@ -193,14 +193,20 @@ h2 {
   margin-top: 20px;
   padding: 10px 20px;
   background-color: #28a745;
+  background-color: #002b0c;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 15px;
   cursor: pointer;
+  border: 0.5px solid rgb(193, 180, 180);
+  transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
 }
 
 .download-btn:hover {
-  background-color: #218838;
+  background-color: #00012B;
+  background-color: #28a745;
+  color: rgb(255, 255, 255);
+  border: 0.5px solid rgb(193, 180, 180);
 }
 
 

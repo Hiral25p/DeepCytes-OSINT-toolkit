@@ -40,11 +40,11 @@ def get_twilio_info(phonenumber):
     response = requests.get(lookup_url, auth=(account_sid, auth_token))
     return response.json() if response.status_code == 200 else {"Error": "Failed to fetch Twilio info."}
 
-def get_numlookupapi_info(phonenumber):
-    api_key = os.getenv('NUMLOOKUPAPI_KEY')
-    url = f"https://www.numlookupapi.com/api/v1/validate/{phonenumber}?apikey={api_key}"
-    response = requests.get(url)
-    return response.json() if response.status_code == 200 else {"Error": "Failed to fetch NumLookup API info."}
+# def get_numlookupapi_info(phonenumber):
+#     api_key = os.getenv('NUMLOOKUPAPI_KEY')
+#     url = f"https://www.numlookupapi.com/api/v1/validate/{phonenumber}?apikey={api_key}"
+#     response = requests.get(url)
+#     return response.json() if response.status_code == 200 else {"Error": "Failed to fetch NumLookup API info."}
 
 def get_ipqualityscore_info(phonenumber):
     api_key = os.getenv('IPQUALITYSCORE_API_KEY')
@@ -164,11 +164,11 @@ def phone_number_osint(phonenumber):
         combined_relevant_info.update(relevant)
         combined_other_info.update(other)
 
-    numlookupapi_info = get_numlookupapi_info(phonenumber)
-    if numlookupapi_info:
-        relevant, other = extract_info(numlookupapi_info)
-        combined_relevant_info.update(relevant)
-        combined_other_info.update(other)
+    # numlookupapi_info = get_numlookupapi_info(phonenumber)
+    # if numlookupapi_info:
+    #     relevant, other = extract_info(numlookupapi_info)
+    #     combined_relevant_info.update(relevant)
+    #     combined_other_info.update(other)
 
     ipqualityscore_info = get_ipqualityscore_info(phonenumber)
     if ipqualityscore_info:
