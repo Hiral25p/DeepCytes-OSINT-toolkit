@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import './App.css'
 import logo from './assets/logo.png'
 import secondarylogo from './assets/dclogo.png'
-import jsPDF from 'jspdf' // Import jsPDF library
-import 'jspdf-autotable' // For table support if needed
+import jsPDF from 'jspdf' 
+import 'jspdf-autotable' 
 
 function App() {
   const [searchType, setSearchType] = useState('phoneNumber')
@@ -84,7 +84,7 @@ function App() {
       `)
 
       setInputValue('')
-      setSubmitted(true) // Set submitted state to true
+      setSubmitted(true) 
     } catch (error) {
       setOutput(
         '<p>There was an error fetching the data. Please try again.</p>'
@@ -115,21 +115,19 @@ function App() {
     }
   }
 
-  // Function to convert image to Base64 format
   const toBase64 = (url) => {
     return new Promise((resolve, reject) => {
       const img = new Image()
-      img.crossOrigin = 'Anonymous' // To avoid CORS issues for local images
+      img.crossOrigin = 'Anonymous' 
       img.src = url
       img.onload = () => {
         const canvas = document.createElement('canvas')
         const ctx = canvas.getContext('2d')
 
-        const squareSize = Math.max(img.width, img.height) // Ensure we maintain square proportions
+        const squareSize = Math.max(img.width, img.height) 
         canvas.width = squareSize
         canvas.height = squareSize
 
-        // Draw image on canvas, ensuring it's centered and not distorted
         ctx.drawImage(
           img,
           (squareSize - img.width) / 2,
@@ -147,54 +145,53 @@ function App() {
     })
   }
 
-  // Function for report generation with image and title
   const downloadPDF = async () => {
     const doc = new jsPDF()
 
-    doc.setFontSize(16)
+    const titles = {
+      phoneNumber: 'Phone Number OSINT Report',
+      instagram: 'Instagram OSINT Report',
+      twitter: 'Twitter OSINT Report',
+      github: 'GitHub OSINT Report',
+      email: 'Email OSINT Report',
+    }
+
+    const reportTitle = titles[searchType] || 'DeepCytes OSINT Report'
 
     const imgData = await toBase64(secondarylogo)
-
-    const imgSize = 26 
-
-    
+    const imgSize = 26
     const pageWidth = doc.internal.pageSize.getWidth()
-    const imgX = (pageWidth - imgSize) / 2 
+    const imgX = (pageWidth - imgSize) / 2
     const imgY = 8
-
-  
     doc.addImage(imgData, 'PNG', imgX, imgY, imgSize, imgSize)
 
     const titleY = imgY + imgSize + 10
     doc.setFontSize(21)
-    doc.text('DeepCytes OSINT Search Report', pageWidth / 2, titleY, {
-      align: 'center',
-    })
+    doc.text(reportTitle, pageWidth / 2, titleY, { align: 'center' })
 
-  
     doc.setLineWidth(0.5)
     doc.line(20, titleY + 2, pageWidth - 20, titleY + 2)
 
     let yOffset = titleY + 20
 
-    
     const plainText = document.querySelector('.output-box').innerText
-
-    const textLines = doc.splitTextToSize(plainText, pageWidth - 20) 
-
+    const textLines = doc.splitTextToSize(plainText, pageWidth - 20)
     textLines.forEach((line) => {
       if (yOffset > 280) {
         doc.addPage()
-        yOffset = 20 
+        yOffset = 20
       }
-      doc.setFontSize(11) 
+      doc.setFontSize(11)
       doc.text(line, 10, yOffset)
       yOffset += 5
     })
 
-    // Save the PDF
-    doc.save('DC-OSINTReport.pdf')
+    const filename = `DC-${
+      searchType.charAt(0).toUpperCase() + searchType.slice(1)
+    }-OSINTReport.pdf`
+    doc.save(filename)
   }
+
 
   return (
     <div className={`container ${submitted ? 'expanded-container' : ''}`}>
