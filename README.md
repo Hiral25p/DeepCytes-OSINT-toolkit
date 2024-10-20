@@ -17,8 +17,9 @@ In your terminal run:
    `cd toolkit`    
 
 To install all the Libraries for Frontend:    
-`npm install react react-dom`   
-`npm install vite`   
+`npm install react react-dom`      
+`npm install vite`     
+`npm install jspdf jspdf-autotable`   
 
 To run the frontend application, use the following command in the frontend terminal:   
 `npm run dev`    
@@ -61,5 +62,9 @@ To run the backend application, use the following command in the backend termina
 
 
 
+
+
+
 ## Note      
-Both, the frontend and backend need to be running simultaneously for the toolkit to work.
+The backend Flask Appilcation doesn't have a UI and displays error even whilst running properly. (Not an issue)         
+Both, the frontend and backend need to be running simultaneously for the toolkit to work.   
