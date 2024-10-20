@@ -5,12 +5,15 @@ import secondarylogo from './assets/dclogo.png'
 import jsPDF from 'jspdf' 
 import 'jspdf-autotable' 
 
+
+
 function App() {
   const [searchType, setSearchType] = useState('phoneNumber')
   const [inputValue, setInputValue] = useState('')
   const [output, setOutput] = useState('')
   const [submitted, setSubmitted] = useState(false)
 
+  // function to format the output info into readable HTML
   const formatOutput = (info) => {
     if (!info) return '<p>No information available.</p>'
     const formattedInfo = []
@@ -43,6 +46,10 @@ function App() {
     return formattedInfo.join('')
   }
 
+
+
+
+  // handle form submission, send data to backend and process the response
   const handleSubmit = async (e) => {
     e.preventDefault()
     const dataToSend = { [searchType]: inputValue || null }
@@ -84,7 +91,7 @@ function App() {
       `)
 
       setInputValue('')
-      setSubmitted(true) 
+      setSubmitted(true)
     } catch (error) {
       setOutput(
         '<p>There was an error fetching the data. Please try again.</p>'
@@ -115,16 +122,20 @@ function App() {
     }
   }
 
+
+
+
+  // converts image to base64 for pdf export
   const toBase64 = (url) => {
     return new Promise((resolve, reject) => {
       const img = new Image()
-      img.crossOrigin = 'Anonymous' 
+      img.crossOrigin = 'Anonymous'
       img.src = url
       img.onload = () => {
         const canvas = document.createElement('canvas')
         const ctx = canvas.getContext('2d')
 
-        const squareSize = Math.max(img.width, img.height) 
+        const squareSize = Math.max(img.width, img.height)
         canvas.width = squareSize
         canvas.height = squareSize
 
@@ -145,6 +156,7 @@ function App() {
     })
   }
 
+  // downloading the  PDF report
   const downloadPDF = async () => {
     const doc = new jsPDF()
 
@@ -191,6 +203,7 @@ function App() {
     }-OSINTReport.pdf`
     doc.save(filename)
   }
+
 
 
   return (

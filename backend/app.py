@@ -1,3 +1,4 @@
+# necessary libraries
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import phonenumbers
@@ -7,11 +8,31 @@ import instaloader
 import tweepy
 from dotenv import load_dotenv
 import os
+from itertools import cycle
 
 load_dotenv()
 
+# initialize Flask app
 app = Flask(__name__)
 CORS(app)
+
+# api keys loop using cycle
+numverify_keys = cycle([os.getenv('NUMVERIFY_API_KEY1'),
+                        os.getenv('NUMVERIFY_API_KEY2'),
+                        os.getenv('NUMVERIFY_API_KEY3'),
+                        os.getenv('NUMVERIFY_API_KEY4'),
+                        os.getenv('NUMVERIFY_API_KEY5')])
+
+twilio_account_sid_keys = cycle([os.getenv('TWILIO_ACCOUNT_SID1'),
+                                 os.getenv('TWILIO_ACCOUNT_SID2')])
+twilio_auth_token_keys = cycle([os.getenv('TWILIO_AUTH_TOKEN1'),
+                                os.getenv('TWILIO_AUTH_TOKEN2')])
+
+ipqualityscore_keys = cycle([os.getenv('IPQUALITYSCORE_API_KEY1'),
+                             os.getenv('IPQUALITYSCORE_API_KEY2'),
+                             os.getenv('IPQUALITYSCORE_API_KEY3'),
+                             os.getenv('IPQUALITYSCORE_API_KEY4'),
+                             os.getenv('IPQUALITYSCORE_API_KEY5')])
 
 def get_basic_phone_info(phonenumber):
     try:
@@ -28,26 +49,20 @@ def get_basic_phone_info(phonenumber):
         return {"Error": "Invalid phone number."}
 
 def get_numverify_info(phonenumber):
-    api_key = os.getenv('NUMVERIFY_API_KEY')
+    api_key = next(numverify_keys)
     url = f"http://apilayer.net/api/validate?access_key={api_key}&number={phonenumber}"
     response = requests.get(url)
     return response.json() if response.status_code == 200 else {"Error": "Failed to fetch NumVerify info."}
 
 def get_twilio_info(phonenumber):
-    account_sid = os.getenv('TWILIO_ACCOUNT_SID')
-    auth_token = os.getenv('TWILIO_AUTH_TOKEN')
+    account_sid = next(twilio_account_sid_keys)
+    auth_token = next(twilio_auth_token_keys)
     lookup_url = f"https://lookups.twilio.com/v1/PhoneNumbers/{phonenumber}"
     response = requests.get(lookup_url, auth=(account_sid, auth_token))
     return response.json() if response.status_code == 200 else {"Error": "Failed to fetch Twilio info."}
 
-# def get_numlookupapi_info(phonenumber):
-#     api_key = os.getenv('NUMLOOKUPAPI_KEY')
-#     url = f"https://www.numlookupapi.com/api/v1/validate/{phonenumber}?apikey={api_key}"
-#     response = requests.get(url)
-#     return response.json() if response.status_code == 200 else {"Error": "Failed to fetch NumLookup API info."}
-
 def get_ipqualityscore_info(phonenumber):
-    api_key = os.getenv('IPQUALITYSCORE_API_KEY')
+    api_key = next(ipqualityscore_keys)
     url = f"https://ipqualityscore.com/api/json/phone/{api_key}/{phonenumber}"
     response = requests.get(url)
     return response.json() if response.status_code == 200 else {"Error": "Failed to fetch IPQualityScore info."}
@@ -100,10 +115,16 @@ def get_instagram_info(username):
         return {"Error": str(e)}
 
 def get_twitter_info(username):
-    bearer_token = os.getenv('TWITTER_BEARER_TOKEN')
+    bearer_token = os.getenv('TWITTER_BEARER_TOKEN1')
+    
+    if not bearer_token:
+        return {"Error": "Bearer token not found in environment variables."}
+    
     client = tweepy.Client(bearer_token=bearer_token)
+    
     try:
         user = client.get_user(username=username, user_fields=["id", "name", "username", "location", "description", "public_metrics", "verified", "created_at"])
+        
         if user.data:
             user_data = user.data
             return {
@@ -120,6 +141,7 @@ def get_twitter_info(username):
             }
         else:
             return {"Error": "User not found on Twitter."}
+    
     except tweepy.TweepyException as e:
         return {"Error": str(e)}
 
@@ -164,11 +186,7 @@ def phone_number_osint(phonenumber):
         combined_relevant_info.update(relevant)
         combined_other_info.update(other)
 
-    # numlookupapi_info = get_numlookupapi_info(phonenumber)
-    # if numlookupapi_info:
-    #     relevant, other = extract_info(numlookupapi_info)
-    #     combined_relevant_info.update(relevant)
-    #     combined_other_info.update(other)
+    
 
     ipqualityscore_info = get_ipqualityscore_info(phonenumber)
     if ipqualityscore_info:
@@ -217,7 +235,6 @@ def process_input():
 
     relevant_info = {}
     other_info = {}
-    fixed_tool_count = 6 
 
     if phone_number:
         phone_relevant, phone_other = phone_number_osint(phone_number)
@@ -235,18 +252,16 @@ def process_input():
 
     if email:  
         relevant_info['Email Info'] = extract_email_info(email)
-        
         relevant_info['Hunter.io Info'] = get_hunter_info(email)
 
     output = {
         "relevant_info": relevant_info,
-        "other_info": other_info,
-        "tools_used": fixed_tool_count
+        "other_info": other_info
     }
 
     return jsonify(output)
 
-
+# start Flask app
 if __name__ == '__main__':
     app.run(debug=True)
 
